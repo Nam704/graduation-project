@@ -6,6 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -17,9 +20,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'role',
+        'avatar',
+        'address',
+        'status'
     ];
 
     /**
@@ -37,11 +44,37 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    public function getAllUsers()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        $users = DB::select("select * from users order by created_at DESC");
+        return $users;
     }
+    public function isAdmin()
+    {
+        $user  = Auth::user();
+        // if (Auth::check()) {
+        //     dd('ok'); // Đăng nhập thành công
+        // } else {
+        //     dd('not'); // Đăng nhập không thành công
+        // }
+        // dd($username = $user->username);
+        // dd(Hash::check(Auth::user()));
+        if (!$user) {
+            return false;
+        }
+
+
+        if ($user->role === 2 && $user->status === 0) {
+
+
+            return true;
+        }
+        return false;
+    }
+
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 }

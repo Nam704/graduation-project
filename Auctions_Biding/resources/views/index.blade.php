@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.layout')
 @section('content')
 <div class="container-fluid">
 
@@ -398,3 +398,6 @@
 
 </div>
 @endsection
+@push('scripts')
+<x-dashboard-scripts />
+@endpush
